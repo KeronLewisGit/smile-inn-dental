@@ -90,7 +90,7 @@
         <div class="lg:col-span-6">
             <div class="grid grid-cols-2 gap-4">
                 <div class="frame aspect-[3/4] mt-10"><img src="{{ asset('images/clinic/invisalign-portrait.jpg') }}" alt="A patient smiling after Invisalign" class="h-full w-full object-cover" loading="lazy"></div>
-                <div class="frame aspect-[3/4] bg-white"><img src="{{ asset('images/clinic/itero-scan.png') }}" alt="An iTero digital scan of a smile" class="h-full w-full object-cover" loading="lazy"></div>
+                <div class="frame aspect-[3/4] bg-white"><img src="{{ asset('images/clinic/itero-scan.jpg') }}" alt="An iTero digital scan of a smile" class="h-full w-full object-cover" loading="lazy"></div>
             </div>
         </div>
     </div>

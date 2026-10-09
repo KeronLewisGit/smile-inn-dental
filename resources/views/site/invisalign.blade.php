@@ -25,7 +25,7 @@
 
 <section id="how" class="section bg-white">
     <div class="wrap grid gap-14 lg:grid-cols-12 lg:items-center">
-        <div class="lg:col-span-5"><div class="frame aspect-[4/5] bg-sand"><img src="{{ asset('images/clinic/itero-scan.png') }}" alt="iTero 5D scan" class="h-full w-full object-cover" loading="lazy"></div></div>
+        <div class="lg:col-span-5"><div class="frame aspect-[4/5] bg-sand"><img src="{{ asset('images/clinic/itero-scan.jpg') }}" alt="iTero 5D scan" class="h-full w-full object-cover" loading="lazy"></div></div>
         <div class="lg:col-span-7">
             <x-site.heading eyebrow="The technology" title="See your future smile, <em class='italic font-normal text-gold-deep'>now</em>." lede="The Smile Inn Invisalign experience is just that: an experience. We were the first in the region with the iTero 5D scanner with integrated imaging." />
             <ol class="mt-10 space-y-6">
