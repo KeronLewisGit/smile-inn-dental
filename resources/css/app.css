@@ -1,0 +1,111 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../views/**/*.blade.php';
+
+@theme {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+    --color-ivory: #fbf8f3;
+    --color-paper: #ffffff;
+    --color-sand: #f3ede3;
+    --color-line: #e8e1d5;
+    --color-ink: #1c1a17;
+    --color-ink-soft: #3b3630;
+    --color-stone: #6f685e;
+    --color-gold: #c9a24a;
+    --color-gold-deep: #a07c2a;
+    --color-gold-soft: #f1e4c3;
+    --color-blush: #f7e1da;
+    --color-blush-deep: #dfa89b;
+    --color-rose: #b8432f;
+    --color-sage: #e3ebe2;
+    --color-sage-deep: #5f7f64;
+
+    --radius-2xl: 1.5rem;
+    --radius-3xl: 2rem;
+    --shadow-soft: 0 20px 60px -30px rgb(28 26 23 / 0.25);
+    --shadow-card: 0 1px 0 rgb(28 26 23 / 0.04), 0 12px 32px -16px rgb(28 26 23 / 0.18);
+}
+
+/* Base button: a utility so the .btn-* components can @apply it (Tailwind v4 cannot apply layer classes). */
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@layer base {
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { @apply bg-ivory text-ink font-sans; }
+    ::selection { background: var(--color-gold-soft); }
+    [x-cloak] { display: none !important; }
+    h1, h2, h3, .display { @apply font-display; }
+}
+
+@layer components {
+    .wrap { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; }
+    .section { @apply py-20 sm:py-28; }
+    .eyebrow { @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-deep; }
+    .eyebrow::before { content: ''; @apply inline-block h-px w-6 bg-gold; }
+    .h-display { @apply font-display text-4xl leading-[1.05] font-medium tracking-tight text-ink sm:text-5xl lg:text-6xl; }
+    .h-section { @apply font-display text-3xl leading-[1.1] font-medium tracking-tight text-ink sm:text-4xl lg:text-5xl; }
+    .h-card { @apply font-display text-2xl leading-tight font-medium text-ink; }
+    .lede { @apply text-lg leading-relaxed text-stone sm:text-xl; }
+    .prose-site { @apply text-base leading-relaxed text-ink-soft; }
+    .prose-site p { @apply mb-5; }
+    .prose-site h2 { @apply mt-10 mb-4 font-display text-3xl font-medium text-ink; }
+    .prose-site h3 { @apply mt-8 mb-3 font-display text-2xl font-medium text-ink; }
+    .prose-site ul { @apply mb-5 list-disc space-y-2 pl-6; }
+    .prose-site a { @apply text-gold-deep underline decoration-gold/40 underline-offset-4 hover:decoration-gold; }
+
+    .btn-gold { @apply btn bg-gold text-ink hover:bg-gold-deep hover:text-white; }
+    .btn-ink { @apply btn bg-ink text-ivory hover:bg-ink-soft; }
+    .btn-ghost { @apply btn bg-transparent text-ink ring-1 ring-ink/15 hover:bg-ink hover:text-ivory hover:ring-ink; }
+    .btn-light { @apply btn bg-white text-ink ring-1 ring-line hover:ring-gold; }
+    .btn-rose { @apply btn bg-rose text-white hover:bg-[#9c3524]; }
+    .btn-sm { @apply px-4 py-2 text-xs; }
+    .btn-lg { @apply px-8 py-4 text-base; }
+    .link-arrow { @apply inline-flex items-center gap-1.5 text-sm font-semibold text-ink transition hover:text-gold-deep; }
+    .link-arrow svg { @apply size-4 transition-transform; }
+    .link-arrow:hover svg { transform: translateX(3px); }
+
+    .card { @apply rounded-3xl bg-white p-7 shadow-card ring-1 ring-line/70; }
+    .card-sand { @apply rounded-3xl bg-sand p-7; }
+    .chip { @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold; }
+    .frame { @apply relative overflow-hidden rounded-3xl; }
+    .frame-gold::after { content: ''; @apply pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-white/30; }
+    .gold-rule { @apply h-px w-full bg-gradient-to-r from-transparent via-gold/60 to-transparent; }
+
+    .label { @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-stone; }
+    .input { @apply w-full rounded-2xl border-0 bg-white px-4 py-3 text-base text-ink shadow-sm ring-1 ring-line placeholder:text-stone/60 focus:outline-none focus:ring-2 focus:ring-gold; }
+    .input-sm { @apply rounded-xl px-3 py-2 text-sm; }
+    .hint { @apply mt-1.5 text-xs text-stone; }
+    .error { @apply mt-1.5 text-xs font-semibold text-rose; }
+    .check { @apply size-4 rounded border-line text-gold focus:ring-gold; }
+
+    .marquee { @apply flex w-max gap-10 whitespace-nowrap; animation: marquee 40s linear infinite; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .nav-link { @apply rounded-full px-3.5 py-2 text-sm font-semibold text-ink-soft transition hover:bg-sand hover:text-ink; }
+    .nav-link.active { @apply bg-sand text-ink; }
+
+    /* Admin */
+    .adm-side-link { @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-stone transition hover:bg-sand hover:text-ink; }
+    .adm-side-link.active { @apply bg-ink text-ivory hover:bg-ink hover:text-ivory; }
+    .adm-side-link svg { @apply size-4.5 shrink-0; }
+    .table { @apply w-full text-left text-sm; }
+    .table th { @apply border-b border-line px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-stone; }
+    .table td { @apply border-b border-line/70 px-4 py-3 align-middle; }
+    .table tr:last-child td { @apply border-0; }
+    .table tbody tr:hover { @apply bg-sand/50; }
+    .stat { @apply rounded-2xl bg-white p-5 ring-1 ring-line; }
+    .tone-amber { @apply bg-amber-50 text-amber-800 ring-1 ring-amber-200; }
+    .tone-green { @apply bg-emerald-50 text-emerald-800 ring-1 ring-emerald-200; }
+    .tone-blue { @apply bg-sky-50 text-sky-800 ring-1 ring-sky-200; }
+    .tone-red { @apply bg-red-50 text-red-800 ring-1 ring-red-200; }
+    .tone-slate { @apply bg-sand text-stone ring-1 ring-line; }
+    .tone-gold { @apply bg-gold-soft text-gold-deep ring-1 ring-gold/40; }
+}
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marquee { animation: none; } .reveal { opacity: 1; transform: none; transition: none; } }

@@ -1,0 +1,6 @@
+<x-admin.layout title="Services">
+    <x-slot:actions><a href="{{ route('admin.services.create') }}" class="btn-gold btn-sm">Add service</a></x-slot:actions>
+    <div class="card overflow-x-auto p-0"><table class="table"><thead><tr><th>Service</th><th>Treatments</th><th>FAQs</th><th>Flags</th><th>Order</th><th></th></tr></thead><tbody>
+        @foreach ($services as $s)<tr><td><span class="font-semibold">{{ $s->name }}</span><span class="block text-xs text-stone">/services/{{ $s->slug }}</span></td><td>{{ count($s->treatments ?? []) }}</td><td>{{ count($s->faqs ?? []) }}</td><td class="space-x-1">@if ($s->featured)<span class="chip tone-gold">Home page</span>@endif @unless ($s->active)<span class="chip tone-slate">Hidden</span>@endunless</td><td>{{ $s->sort }}</td><td class="text-right whitespace-nowrap"><a href="{{ route('services.show', $s) }}" target="_blank" class="btn-light btn-sm">View</a> <a href="{{ route('admin.services.edit', $s) }}" class="btn-light btn-sm">Edit</a> <form method="post" action="{{ route('admin.services.destroy', $s) }}" class="inline" onsubmit="return confirm('Remove this service?')">@csrf @method('delete')<button class="btn-light btn-sm text-rose">Remove</button></form></td></tr>@endforeach
+    </tbody></table></div>
+</x-admin.layout>

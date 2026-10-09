@@ -1,0 +1,7 @@
+<x-admin.layout title="Booking types">
+    <x-slot:actions><a href="{{ route('admin.appointment-types.create') }}" class="btn-gold btn-sm">Add type</a></x-slot:actions>
+    <p class="mb-4 text-sm text-stone">These are the options patients choose from when booking online.</p>
+    <div class="card overflow-x-auto p-0"><table class="table"><thead><tr><th>Name</th><th>Duration</th><th>Provider</th><th>Flags</th><th>Order</th><th></th></tr></thead><tbody>
+        @foreach ($types as $t)<tr><td><span class="font-semibold">{{ $t->name }}</span><span class="block text-xs text-stone">{{ $t->description }}</span></td><td>{{ $t->duration_minutes }} min</td><td>{{ $t->provider?->name ?? 'Any' }}</td><td class="space-x-1">@if ($t->is_free)<span class="chip tone-green">Free</span>@endif @if ($t->is_virtual)<span class="chip tone-blue">Virtual</span>@endif @unless ($t->active)<span class="chip tone-slate">Hidden</span>@endunless</td><td>{{ $t->sort }}</td><td class="text-right whitespace-nowrap"><a href="{{ route('admin.appointment-types.edit', $t) }}" class="btn-light btn-sm">Edit</a> <form method="post" action="{{ route('admin.appointment-types.destroy', $t) }}" class="inline" onsubmit="return confirm('Remove this type? Existing appointments keep their details.')">@csrf @method('delete')<button class="btn-light btn-sm text-rose">Remove</button></form></td></tr>@endforeach
+    </tbody></table></div>
+</x-admin.layout>
