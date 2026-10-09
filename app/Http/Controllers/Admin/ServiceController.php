@@ -53,6 +53,7 @@ class ServiceController extends Controller
         return back()->with('saved', 'Service removed.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate(['name' => ['required', 'string', 'max:120'], 'tagline' => ['nullable', 'string', 'max:200'], 'intro' => ['nullable', 'string', 'max:2000'], 'body' => ['nullable', 'string', 'max:10000'], 'icon' => ['nullable', 'string', 'max:40'], 'image' => ['nullable', 'image', 'max:5120'], 'treatments' => ['nullable', 'string', 'max:20000'], 'faqs' => ['nullable', 'string', 'max:20000'], 'sort' => ['nullable', 'integer', 'min:0']]);

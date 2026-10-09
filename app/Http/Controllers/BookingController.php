@@ -8,10 +8,12 @@ use App\Models\Patient;
 use App\Models\Setting;
 use App\Notifications\AppointmentMail;
 use App\Services\Availability;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\ValidationException;
@@ -24,19 +26,19 @@ class BookingController extends Controller
     public function create(Request $request): View
     {
         $types = AppointmentType::active()->with('provider')->get();
-        $selected = $request->filled('type') ? $types->firstWhere('slug', $request->type) : null;
+        $selected = $request->filled('type') ? $types->firstWhere('slug', $request->query('type')) : null;
 
-        return view('site.book', ['types' => $types, 'selected' => $selected, 'hours' => $this->availability->hoursForDisplay(), 'horizon' => (int) Setting::get('booking')['horizon_days']]);
+        return view('site.book', ['types' => $types, 'selected' => $selected, 'hours' => $this->availability->hoursForDisplay(), 'horizon' => $this->availability->horizonDays()]);
     }
 
     /** JSON: open days for the type, and the slots for a given date. */
     public function slots(Request $request): JsonResponse
     {
-        $data = $request->validate(['type' => ['required', 'exists:appointment_types,slug'], 'date' => ['nullable', 'date']]);
+        $data = $request->validate(['type' => ['required', 'exists:appointment_types,slug'], 'date' => ['nullable', 'date_format:Y-m-d']]);
         $type = AppointmentType::where('slug', $data['type'])->where('active', true)->firstOrFail();
         $out = ['open_days' => $this->availability->openDays($type)];
         if (! empty($data['date'])) {
-            $out['slots'] = $this->availability->slotsFor(Carbon::parse($data['date'])->startOfDay(), $type);
+            $out['slots'] = $this->availability->slotsFor(Carbon::createFromFormat('Y-m-d', $data['date'])->startOfDay(), $type);
         }
 
         return response()->json($out);
@@ -46,7 +48,7 @@ class BookingController extends Controller
     {
         $data = $request->validate([
             'type' => ['required', 'exists:appointment_types,slug'],
-            'date' => ['required', 'date', 'after_or_equal:today'],
+            'date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
             'time' => ['required', 'date_format:H:i'],
             'first_name' => ['required', 'string', 'max:80'],
             'last_name' => ['required', 'string', 'max:80'],
@@ -56,39 +58,45 @@ class BookingController extends Controller
             'new_patient' => ['nullable', 'boolean'],
             'marketing_opt_in' => ['nullable', 'boolean'],
             'website' => ['nullable', 'max:0'], // honeypot
-        ], ['website.max' => 'Something went wrong. Please try again.']);
+        ], ['website.max' => 'Something went wrong. Please try again.', 'date.date_format' => 'Please pick a day from the calendar.']);
 
         $type = AppointmentType::where('slug', $data['type'])->where('active', true)->firstOrFail();
-        $start = Carbon::parse($data['date'].' '.$data['time']);
+        $start = Carbon::createFromFormat('Y-m-d H:i', $data['date'].' '.$data['time']);
 
-        $appointment = DB::transaction(function () use ($data, $type, $start, $request) {
-            if (! $this->availability->isAvailable($start, $type)) {
-                throw ValidationException::withMessages(['time' => 'That time was just taken. Please pick another slot.']);
-            }
-            $patient = Patient::findOrCreateFrom($data + ['source' => 'website']);
-            $notes = trim(($request->boolean('new_patient') ? "New patient.\n" : '').($data['notes'] ?? ''));
+        // One booking at a time per day, so two patients cannot both take the last chair in the same slot.
+        try {
+            $appointment = Cache::lock('booking:'.$data['date'], 10)->block(5, function () use ($data, $type, $start, $request) {
+                return DB::transaction(function () use ($data, $type, $start, $request) {
+                    if (! $this->availability->isAvailable($start, $type)) {
+                        throw ValidationException::withMessages(['time' => 'That time was just taken. Please pick another slot.']);
+                    }
+                    $patient = Patient::findOrCreateFrom($data + ['source' => 'website']);
+                    $notes = trim(($request->boolean('new_patient') ? "New patient.\n" : '').($data['notes'] ?? ''));
 
-            return Appointment::create([
-                'patient_id' => $patient->id, 'appointment_type_id' => $type->id, 'team_member_id' => $type->team_member_id,
-                'starts_at' => $start, 'ends_at' => $start->copy()->addMinutes($type->duration_minutes), 'status' => 'pending', 'patient_notes' => $notes ?: null, 'source' => 'website',
-            ]);
-        });
+                    return Appointment::create([
+                        'patient_id' => $patient->id, 'appointment_type_id' => $type->id, 'team_member_id' => $type->team_member_id,
+                        'starts_at' => $start, 'ends_at' => $start->copy()->addMinutes($type->duration_minutes), 'status' => 'pending', 'patient_notes' => $notes ?: null, 'source' => 'website',
+                    ]);
+                });
+            });
+        } catch (LockTimeoutException) {
+            throw ValidationException::withMessages(['time' => 'We are very busy right now. Please try again in a moment.']);
+        }
 
         $this->notify($appointment, 'requested');
 
-        return redirect()->route('book.done', $appointment);
+        return redirect()->route('book.done', $appointment->manage_token);
     }
 
-    public function done(Appointment $appointment): View
+    /** Confirmation page, reached only through the private manage token so references cannot be guessed. */
+    public function done(string $token): View
     {
-        return view('site.book-done', ['appointment' => $appointment->load('patient', 'type', 'provider')]);
+        return view('site.book-done', ['appointment' => $this->byToken($token)]);
     }
 
     public function manage(string $token): View
     {
-        $appointment = Appointment::where('manage_token', $token)->with('patient', 'type', 'provider')->firstOrFail();
-
-        return view('site.book-manage', ['appointment' => $appointment]);
+        return view('site.book-manage', ['appointment' => $this->byToken($token)]);
     }
 
     public function cancel(Request $request, string $token): RedirectResponse
@@ -118,5 +126,10 @@ class BookingController extends Controller
         } catch (\Throwable $e) {
             report($e);
         }
+    }
+
+    private function byToken(string $token): Appointment
+    {
+        return Appointment::where('manage_token', $token)->with('patient', 'type', 'provider')->firstOrFail();
     }
 }

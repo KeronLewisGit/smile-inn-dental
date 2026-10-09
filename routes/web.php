@@ -25,9 +25,9 @@ Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/book', [BookingController::class, 'create'])->name('book');
-Route::get('/book/slots', [BookingController::class, 'slots'])->name('book.slots');
+Route::get('/book/slots', [BookingController::class, 'slots'])->middleware('throttle:60,1')->name('book.slots');
 Route::post('/book', [BookingController::class, 'store'])->middleware('throttle:10,1')->name('book.store');
-Route::get('/book/done/{appointment:reference}', [BookingController::class, 'done'])->name('book.done');
+Route::get('/book/done/{token}', [BookingController::class, 'done'])->name('book.done');
 Route::get('/appointment/{token}', [BookingController::class, 'manage'])->name('book.manage');
 Route::post('/appointment/{token}/cancel', [BookingController::class, 'cancel'])->name('book.cancel');
 

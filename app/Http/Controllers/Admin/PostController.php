@@ -53,6 +53,7 @@ class PostController extends Controller
         return redirect()->route('admin.posts.index')->with('saved', 'Post deleted.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate(['title' => ['required', 'string', 'max:200'], 'slug' => ['nullable', 'string', 'max:220', 'regex:/^[a-z0-9-]+$/'], 'category' => ['required', 'in:'.implode(',', Post::CATEGORIES)], 'excerpt' => ['nullable', 'string', 'max:500'], 'body' => ['nullable', 'string', 'max:100000'], 'cover_image' => ['nullable', 'image', 'max:5120'], 'published_at' => ['nullable', 'date']]);

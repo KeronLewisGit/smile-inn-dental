@@ -25,7 +25,7 @@ class InquiryController extends Controller
         ], ['website.max' => 'Something went wrong. Please try again.']);
 
         [$first, $last] = array_pad(explode(' ', trim($data['name']), 2), 2, '');
-        $patient = Patient::findOrCreateFrom(['first_name' => $first, 'last_name' => $last ?: '-', 'email' => $data['email'], 'phone' => $data['phone'] ?? null, 'gender' => $data['gender'] ?? null, 'source' => 'website']);
+        $patient = Patient::findOrCreateFrom(['first_name' => $first, 'last_name' => $last, 'email' => $data['email'], 'phone' => $data['phone'] ?? null, 'gender' => $data['gender'] ?? null, 'source' => 'website']);
         $inquiry = Inquiry::create(['patient_id' => $patient->id, 'name' => $data['name'], 'email' => $data['email'], 'phone' => Patient::normalisePhone($data['phone'] ?? null), 'service' => $data['service'] ?? null, 'gender' => $data['gender'] ?? null, 'message' => $data['message']]);
 
         try {

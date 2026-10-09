@@ -46,6 +46,7 @@ class TestimonialController extends Controller
         return back()->with('saved', 'Testimonial removed.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate(['name' => ['required', 'string', 'max:120'], 'quote' => ['required', 'string', 'max:2000'], 'treatment' => ['nullable', 'string', 'max:80'], 'rating' => ['required', 'integer', 'min:1', 'max:5'], 'source' => ['nullable', 'string', 'max:40'], 'video_url' => ['nullable', 'url', 'max:255'], 'sort' => ['nullable', 'integer', 'min:0']]);

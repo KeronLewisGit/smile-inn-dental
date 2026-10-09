@@ -11,6 +11,7 @@ class AppointmentMail extends Notification
 {
     public function __construct(public Appointment $appointment, public string $event, public bool $forClinic = false) {}
 
+    /** @return array<int, string> */
     public function via(object $notifiable): array
     {
         return ['mail'];
@@ -20,7 +21,7 @@ class AppointmentMail extends Notification
     {
         $a = $this->appointment->loadMissing('patient', 'type', 'provider');
         $when = $a->starts_at->format('l j F Y \a\t g:i A');
-        $what = ($a->type?->name ?? 'Appointment').($a->provider ? ' with '.$a->provider->name : '');
+        $what = ($a->type->name ?? 'Appointment').($a->provider ? ' with '.$a->provider->name : '');
         $clinic = config('clinic.name');
 
         if ($this->forClinic) {

@@ -64,7 +64,7 @@
             <x-site.heading eyebrow="Our values" title="Minimalist design, <em class='italic font-normal text-gold-deep'>maximum</em> comfort." lede="Every area of the clinic was planned around simplicity, elegance and care, so the only thing you have to think about is relaxing." />
             <dl class="mt-10 grid gap-8 sm:grid-cols-3">
                 @foreach ([['shield', 'Award-winning expertise', "Emerald-certified Invisalign providers and a team of 10+ specialists, recognised across the region."], ['sparkle', 'Premium care', 'Personalised treatment plans, the latest technology and a spa-like environment.'], ['heart', 'Gentle by design', 'Patients who used to dread the dentist tell us they now look forward to coming in.']] as [$icon, $h, $t])
-                    <div class="reveal"><span class="inline-flex size-11 items-center justify-center rounded-2xl bg-gold-soft text-gold-deep"><x-icon :name="$icon" class="size-5" /></span><dt class="mt-4 font-display text-2xl font-medium">{{ $h }}</dt><dd class="mt-2 text-sm leading-relaxed text-stone">{{ $t }}</dd></div>
+                    <div class="reveal"><dt><span class="inline-flex size-11 items-center justify-center rounded-2xl bg-gold-soft text-gold-deep"><x-icon :name="$icon" class="size-5" /></span><span class="mt-4 block font-display text-2xl font-medium">{{ $h }}</span></dt><dd class="mt-2 text-sm leading-relaxed text-stone">{{ $t }}</dd></div>
                 @endforeach
             </dl>
             <div class="mt-10 grid grid-cols-3 gap-4 border-t border-line pt-8">

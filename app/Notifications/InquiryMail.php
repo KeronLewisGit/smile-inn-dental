@@ -10,6 +10,7 @@ class InquiryMail extends Notification
 {
     public function __construct(public Inquiry $inquiry, public bool $forClinic = false) {}
 
+    /** @return array<int, string> */
     public function via(object $notifiable): array
     {
         return ['mail'];

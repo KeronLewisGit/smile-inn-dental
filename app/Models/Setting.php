@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $key
+ * @property mixed $value
+ */
 /** Editable clinic settings (hours, contact details, booking rules). Falls back to config('clinic.*'). */
 #[Fillable(['key', 'value'])]
 class Setting extends Model

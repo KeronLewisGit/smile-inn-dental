@@ -47,6 +47,7 @@ class AppointmentTypeController extends Controller
         return back()->with('saved', 'Appointment type removed.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate(['name' => ['required', 'string', 'max:120'], 'description' => ['nullable', 'string', 'max:255'], 'duration_minutes' => ['required', 'integer', 'min:10', 'max:480'], 'team_member_id' => ['nullable', 'exists:team_members,id'], 'sort' => ['nullable', 'integer', 'min:0']]);
