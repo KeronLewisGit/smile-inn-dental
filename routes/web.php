@@ -17,6 +17,7 @@ Route::get('/team/{member}', [SiteController::class, 'member'])->name('team.show
 Route::get('/testimonials', [SiteController::class, 'testimonials'])->name('testimonials');
 Route::get('/contact', [SiteController::class, 'contact'])->name('contact');
 Route::get('/privacy', [SiteController::class, 'privacy'])->name('privacy');
+Route::get('/sitemap.xml', [SiteController::class, 'sitemap'])->name('sitemap');
 Route::get('/services', [ServiceController::class, 'index'])->name('services');
 Route::get('/invisalign', [ServiceController::class, 'invisalign'])->name('invisalign');
 Route::get('/emergency', [ServiceController::class, 'emergency'])->name('emergency');

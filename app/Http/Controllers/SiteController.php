@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\TeamMember;
 use App\Models\Testimonial;
 use App\Services\Availability;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class SiteController extends Controller
@@ -54,5 +55,16 @@ class SiteController extends Controller
     public function privacy(): View
     {
         return view('site.privacy');
+    }
+
+    /** XML sitemap of every public page, for search engines. */
+    public function sitemap(): Response
+    {
+        $urls = collect(['home', 'services', 'invisalign', 'emergency', 'team', 'clinic', 'testimonials', 'blog', 'contact', 'book', 'privacy'])->map(fn ($r) => ['loc' => route($r), 'lastmod' => null])
+            ->concat(Service::active()->get()->map(fn ($s) => ['loc' => route('services.show', $s), 'lastmod' => $s->updated_at]))
+            ->concat(TeamMember::active()->get()->map(fn ($m) => ['loc' => route('team.show', $m), 'lastmod' => $m->updated_at]))
+            ->concat(Post::published()->get()->map(fn ($p) => ['loc' => route('blog.show', $p), 'lastmod' => $p->updated_at]));
+
+        return response()->view('site.sitemap', ['urls' => $urls])->header('Content-Type', 'application/xml');
     }
 }

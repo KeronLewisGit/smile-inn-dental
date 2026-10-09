@@ -20,7 +20,7 @@
             <p class="text-sm text-ivory/70">Oral health tips, Invisalign offers and clinic news. No spam, ever.</p>
             @if (session('newsletter'))<p class="mt-4 rounded-xl bg-gold/15 px-4 py-3 text-sm font-semibold text-gold">{{ session('newsletter') }}</p>@else
             <form method="post" action="{{ route('newsletter.store') }}" class="mt-4 flex gap-2">@csrf<input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden"><label for="nl-email" class="sr-only">Email</label><input id="nl-email" name="email" type="email" required placeholder="you@email.com" class="input bg-white/10 text-ivory ring-white/15 placeholder:text-ivory/40 focus:ring-gold"><button class="btn-gold shrink-0 px-4">Join</button></form>
-            @error('email')<p class="error text-gold">{{ $message }}</p>@enderror
+            @if (isset($errors) && $errors->has('email'))<p class="error text-gold">{{ $errors->first('email') }}</p>@endif
             @endif
             <a href="{{ $clinic['review_url'] }}" target="_blank" rel="noopener" class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ivory/80 hover:text-gold"><x-icon name="star" class="size-4 text-gold" />Leave us a Google review</a>
         </div>

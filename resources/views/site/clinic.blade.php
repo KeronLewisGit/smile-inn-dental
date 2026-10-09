@@ -17,7 +17,7 @@
                 @endforeach
             </ul>
         </x-site.heading>
-        <div class="grid grid-cols-2 gap-4"><div class="frame aspect-[3/4]"><img src="{{ asset('images/clinic/itero-scan.png') }}" alt="iTero scan" class="h-full w-full object-cover" loading="lazy"></div><div class="frame aspect-[3/4] mt-10"><img src="{{ asset('images/clinic/moment-6.webp') }}" alt="A relaxed patient" class="h-full w-full object-cover" loading="lazy"></div></div>
+        <div class="grid grid-cols-2 gap-4"><div class="frame aspect-[3/4]"><img src="{{ asset('images/clinic/itero-scan.jpg') }}" alt="iTero scan" class="h-full w-full object-cover" loading="lazy"></div><div class="frame aspect-[3/4] mt-10"><img src="{{ asset('images/clinic/moment-6.webp') }}" alt="A relaxed patient" class="h-full w-full object-cover" loading="lazy"></div></div>
     </div>
 </section>
 
