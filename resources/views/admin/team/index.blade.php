@@ -1,0 +1,6 @@
+<x-admin.layout title="Team">
+    <x-slot:actions><a href="{{ route('admin.team.create') }}" class="btn-gold btn-sm">Add member</a></x-slot:actions>
+    <div class="card overflow-x-auto p-0"><table class="table"><thead><tr><th></th><th>Name</th><th>Title</th><th>Flags</th><th>Order</th><th></th></tr></thead><tbody>
+        @foreach ($members as $m)<tr><td class="w-14"><img src="{{ $m->photoUrl() }}" alt="" class="size-10 rounded-full object-cover"></td><td class="font-semibold">{{ $m->name }}</td><td class="text-stone">{{ $m->title }}</td><td class="space-x-1">@if ($m->is_dentist)<span class="chip tone-gold">Dentist</span>@endif @if ($m->accepts_bookings)<span class="chip tone-blue">Bookable</span>@endif @unless ($m->active)<span class="chip tone-slate">Hidden</span>@endunless</td><td>{{ $m->sort }}</td><td class="text-right whitespace-nowrap"><a href="{{ route('admin.team.edit', $m) }}" class="btn-light btn-sm">Edit</a> <form method="post" action="{{ route('admin.team.destroy', $m) }}" class="inline" onsubmit="return confirm('Remove {{ $m->name }}?')">@csrf @method('delete')<button class="btn-light btn-sm text-rose">Remove</button></form></td></tr>@endforeach
+    </tbody></table></div>
+</x-admin.layout>

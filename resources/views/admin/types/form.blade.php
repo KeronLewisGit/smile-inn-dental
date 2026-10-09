@@ -1,0 +1,11 @@
+<x-admin.layout :title="$type->exists ? 'Edit booking type' : 'Add booking type'">
+    <form method="post" action="{{ $type->exists ? route('admin.appointment-types.update', $type) : route('admin.appointment-types.store') }}" class="card grid max-w-3xl gap-4 sm:grid-cols-2">@csrf @if ($type->exists) @method('patch') @endif
+        <x-admin.field label="Name" name="name" required class="sm:col-span-2"><input name="name" value="{{ old('name', $type->name) }}" required class="input"></x-admin.field>
+        <x-admin.field label="Description" name="description" class="sm:col-span-2"><input name="description" value="{{ old('description', $type->description) }}" class="input"></x-admin.field>
+        <x-admin.field label="Duration (minutes)" name="duration_minutes" required><input name="duration_minutes" type="number" min="10" max="480" step="5" value="{{ old('duration_minutes', $type->duration_minutes) }}" required class="input"></x-admin.field>
+        <x-admin.field label="Fixed provider" name="team_member_id" hint="Leave as Any unless only one person does this."><select name="team_member_id" class="input"><option value="">Any</option>@foreach ($providers as $p)<option value="{{ $p->id }}" @selected((int) old('team_member_id', $type->team_member_id) === $p->id)>{{ $p->name }}</option>@endforeach</select></x-admin.field>
+        <x-admin.field label="Display order" name="sort"><input name="sort" type="number" min="0" value="{{ old('sort', $type->sort) }}" class="input"></x-admin.field>
+        <div class="space-y-2 self-end text-sm"><label class="flex items-center gap-2"><input type="checkbox" name="is_free" value="1" class="check" @checked(old('is_free', $type->is_free))>Free</label><label class="flex items-center gap-2"><input type="checkbox" name="is_virtual" value="1" class="check" @checked(old('is_virtual', $type->is_virtual))>Virtual (video call)</label><label class="flex items-center gap-2"><input type="checkbox" name="active" value="1" class="check" @checked(old('active', $type->active))>Bookable online</label></div>
+        <div class="flex gap-2 sm:col-span-2"><button class="btn-gold">Save</button><a href="{{ route('admin.appointment-types.index') }}" class="btn-light">Cancel</a></div>
+    </form>
+</x-admin.layout>
