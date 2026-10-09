@@ -73,6 +73,24 @@ class Availability
         return $out;
     }
 
+    /** The earliest open slot for a type within the horizon, or null. */
+    public function nextSlot(AppointmentType $type): ?Carbon
+    {
+        $horizon = (int) Setting::get('booking')['horizon_days'];
+        for ($d = now()->startOfDay(); $d->lte(now()->addDays($horizon)); $d->addDay()) {
+            if (! $this->isOpenOn($d)) {
+                continue;
+            }
+            foreach ($this->slotsFor($d->copy(), $type) as $slot) {
+                if ($slot['available']) {
+                    return $d->copy()->setTimeFromTimeString($slot['time']);
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function hoursForDisplay(): array
     {
         $names = ['mon' => 'Monday', 'tue' => 'Tuesday', 'wed' => 'Wednesday', 'thu' => 'Thursday', 'fri' => 'Friday', 'sat' => 'Saturday', 'sun' => 'Sunday'];
