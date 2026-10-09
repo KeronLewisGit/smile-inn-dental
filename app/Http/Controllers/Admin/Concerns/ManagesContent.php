@@ -19,7 +19,11 @@ trait ManagesContent
         return 'uploads/'.$folder.'/'.$name;
     }
 
-    /** "Name | description" per line into [{name, description}]. */
+    /**
+     * "Name | description" per line into [{name, description}].
+     *
+     * @return array<int, array<string, string>>
+     */
     protected function linesToPairs(?string $text, string $a = 'name', string $b = 'description'): array
     {
         return collect(preg_split('/\r?\n/', (string) $text))->map(fn ($l) => trim($l))->filter()->map(function ($line) use ($a, $b) {
@@ -29,6 +33,7 @@ trait ManagesContent
         })->values()->all();
     }
 
+    /** @param array<int, array<string, string>>|null $pairs */
     protected function pairsToLines(?array $pairs, string $a = 'name', string $b = 'description'): string
     {
         return collect($pairs ?? [])->map(fn ($p) => ($p[$a] ?? '').' | '.($p[$b] ?? ''))->implode("\n");

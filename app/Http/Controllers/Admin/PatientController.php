@@ -48,6 +48,7 @@ class PatientController extends Controller
         return redirect()->route('admin.patients.show', $patient)->with('saved', 'Patient updated.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate([

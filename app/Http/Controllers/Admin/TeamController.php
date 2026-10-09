@@ -53,6 +53,7 @@ class TeamController extends Controller
         return back()->with('saved', 'Team member removed.');
     }
 
+    /** @return array<string, mixed> */
     private function validated(Request $request): array
     {
         $data = $request->validate(['name' => ['required', 'string', 'max:120'], 'title' => ['required', 'string', 'max:160'], 'bio' => ['nullable', 'string', 'max:3000'], 'instagram' => ['nullable', 'url', 'max:255'], 'photo' => ['nullable', 'image', 'max:5120'], 'sort' => ['nullable', 'integer', 'min:0']]);

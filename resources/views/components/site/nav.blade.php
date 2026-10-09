@@ -6,7 +6,7 @@
             <p class="truncate"><span class="text-gold">Emerald certified</span> · The Caribbean's #1 Invisalign clinic · Free Invisalign consults</p>
             <div class="hidden items-center gap-5 sm:flex">
                 <a href="tel:{{ $clinic['phone_href'] }}" class="inline-flex items-center gap-1.5 hover:text-gold"><x-icon name="phone" class="size-3.5" />{{ $clinic['phone'] }}</a>
-                <span class="inline-flex items-center gap-1.5 text-ivory/70"><x-icon name="clock" class="size-3.5" />Mon – Sat, 8:00 AM – 3:30 PM</span>
+                <span class="inline-flex items-center gap-1.5 text-ivory/70"><x-icon name="clock" class="size-3.5" />{{ app(\App\Services\Availability::class)->hoursSummary() }}</span>
             </div>
         </div>
     </div>
