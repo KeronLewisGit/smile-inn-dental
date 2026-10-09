@@ -25,10 +25,10 @@
                     <div class="flex flex-1 flex-col justify-between rounded-3xl bg-ink p-5 text-ivory"><img src="{{ asset('images/badges/emerald.png') }}" alt="Invisalign Emerald provider" class="h-14 w-14 object-contain"><p class="mt-4 font-display text-2xl leading-tight">Emerald.<br><span class="text-gold">The highest Invisalign tier in the Caribbean.</span></p></div>
                 </div>
             </div>
-            <div class="absolute -bottom-6 -left-4 hidden rounded-2xl bg-white px-5 py-4 shadow-soft ring-1 ring-line sm:block">
-                <p class="text-[11px] font-semibold uppercase tracking-wider text-stone">Next available</p>
-                <p class="mt-1 font-display text-xl">Tomorrow, 8:00 AM <a href="{{ route('book') }}" class="ml-2 text-sm font-sans font-semibold text-gold-deep hover:underline">Book →</a></p>
-            </div>
+            @if ($nextSlot)<div class="absolute -bottom-6 -left-4 hidden rounded-2xl bg-white px-5 py-4 shadow-soft ring-1 ring-line sm:block">
+                <p class="text-[11px] font-semibold uppercase tracking-wider text-stone">Next available consultation</p>
+                <p class="mt-1 font-display text-xl">{{ $nextSlot->isToday() ? 'Today' : ($nextSlot->isTomorrow() ? 'Tomorrow' : $nextSlot->format('D j M')) }}, {{ $nextSlot->format('g:i A') }} <a href="{{ route('book', ['type' => 'general-consultation']) }}" class="ml-2 font-sans text-sm font-semibold text-gold-deep hover:underline">Book →</a></p>
+            </div>@endif
         </div>
     </div>
     {{-- Marquee --}}

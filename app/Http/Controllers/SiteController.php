@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AppointmentType;
 use App\Models\Post;
 use App\Models\Service;
 use App\Models\TeamMember;
@@ -19,6 +20,7 @@ class SiteController extends Controller
             'testimonials' => Testimonial::active()->where('featured', true)->get(),
             'posts' => Post::published()->take(3)->get(),
             'hours' => app(Availability::class)->hoursForDisplay(),
+            'nextSlot' => ($t = AppointmentType::active()->where('slug', 'general-consultation')->first()) ? app(Availability::class)->nextSlot($t) : null,
         ]);
     }
 
