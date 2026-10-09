@@ -6,7 +6,7 @@ fonts) is committed, so the server needs no Node.
 
 ## 1. hPanel
 
-1. **PHP**: Websites → PHP configuration → **8.3** or **8.4** with `pdo_mysql`, `mbstring`, `fileinfo`, `gd` (all default).
+1. **PHP**: Websites → PHP configuration → **8.4** (the lock file needs PHP >= 8.4.1; 8.3 fails `composer install`) with `pdo_mysql`, `mbstring`, `fileinfo`, `gd` (all default).
 2. **MySQL**: Databases → create a database and user; note the three values.
 3. **Email**: create a mailbox such as `hello@smileinndental.com` and note its SMTP password. The site emails patients
    when they book, when you confirm/cancel, and the day before their visit; the clinic gets a copy of every booking and enquiry.
@@ -14,8 +14,11 @@ fonts) is committed, so the server needs no Node.
 
 ## 2. After `git clone` into `public_html` (SSH)
 
+On Hostinger the folder is `~/domains/<your-domain>/public_html`. If `php -v` on the command line still shows 8.3 after
+switching in hPanel, use the 8.4 binary directly: `/opt/alt/php84/usr/bin/php` in place of `php` below.
+
 ```sh
-cd ~/public_html
+cd ~/domains/smileinndental.com/public_html   # or wherever you cloned
 php /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
 cp .env.hostinger.example .env
 php artisan key:generate --force
